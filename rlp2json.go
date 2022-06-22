@@ -44,7 +44,7 @@ func parse(ba []byte, pos int) int {
 	} else {
 		fmt.Print("\"")
 		if b < 0x80 {
-			fmt.Printf("%x", b)
+			fmt.Printf("%02x", b)
 		} else {
 			var len int
 			if b < 0xB8 {
@@ -58,7 +58,7 @@ func parse(ba []byte, pos int) int {
 				}
 			}
 			for i := 0; i < len; i++ {
-				fmt.Printf("%x", ba[pos])
+				fmt.Printf("%02x", ba[pos])
 				pos++
 			}
 		}
