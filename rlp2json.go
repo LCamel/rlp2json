@@ -16,20 +16,11 @@ func main() {
 }
 func parse(ba []byte, pos int) int {
 	var b byte = ba[pos]
-	pos++
+        pos++
 	if b >= 0xC0 {
 		fmt.Print("[")
 		var len int
-		if b < 0xF8 {
-			len = (int)(b - 0xC0)
-		} else {
-			var lenLen int = (int)(b - 0xF8 + 1)
-			len = 0
-			for i := 0; i < lenLen; i++ {
-				len = len*256 + (int)(ba[pos])
-				pos++
-			}
-		}
+		len, pos = getLen(ba, pos, int(b-0xC0))
 		if len > 0 {
 			var done = pos + len
 			for {
@@ -43,20 +34,11 @@ func parse(ba []byte, pos int) int {
 		fmt.Print("]")
 	} else {
 		fmt.Print("\"")
+		var len int
 		if b < 0x80 {
 			fmt.Printf("%02x", b)
 		} else {
-			var len int
-			if b < 0xB8 {
-				len = (int)(b - 0x80)
-			} else {
-				var lenLen int = (int)(b - 0xB8 + 1)
-				len = 0
-				for i := 0; i < lenLen; i++ {
-					len = len*256 + (int)(ba[pos])
-					pos++
-				}
-			}
+			len, pos = getLen(ba, pos, int(b-0x80))
 			for i := 0; i < len; i++ {
 				fmt.Printf("%02x", ba[pos])
 				pos++
@@ -65,4 +47,15 @@ func parse(ba []byte, pos int) int {
 		fmt.Print("\"")
 	}
 	return pos
+}
+func getLen(ba []byte, pos int, len int) (int, int) {
+	if len >= 0x38 {
+		var lenLen int = int(len - 0x38 + 1)
+		len = 0
+		for i := 0; i < lenLen; i++ {
+			len = len*256 + int(ba[pos])
+			pos++
+		}
+	}
+	return len, pos
 }
