@@ -51,14 +51,11 @@ if __name__ == "__main__":
     arg_parser.add_argument("--help", action="help")
 
     group = arg_parser.add_mutually_exclusive_group()
-    group.add_argument("-h", "--hex", action="store_const", dest="input_type",
-        const="hex", help="hex input (default)")
-    group.add_argument("-b", "--binary", action="store_const", dest="input_type",
-        const="binary", help="binary input")
-    group.set_defaults(input_type="hex")
+    group.add_argument("-h", "--hex", action="store_true", help="hex input (default)")
+    group.add_argument("-b", "--binary", action="store_true", help="binary input")
 
     args = arg_parser.parse_args()
-    if args.input_type == "binary":
+    if args.binary:
         read_byte = read_binary_stdin
     else:
         read_byte = read_hex_stdin
