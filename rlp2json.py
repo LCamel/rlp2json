@@ -1,13 +1,11 @@
 import sys
+import argparse
 
-def read_byte_stdin():
+def read_binary_stdin():
     return sys.stdin.buffer.read(1)[0]
 
 def read_hex_stdin():
     return int(sys.stdin.read(2), 16)
-
-#read_byte = read_byte_stdin
-read_byte = read_hex_stdin
 
 def write(s):
     print(s, end = "")
@@ -48,4 +46,21 @@ def parse():
         write("\"")
     return 1 + lenlen + l
 
-parse()
+if __name__ == "__main__":
+    arg_parser = argparse.ArgumentParser(add_help=False)
+    arg_parser.add_argument("--help", action="help")
+
+    group = arg_parser.add_mutually_exclusive_group()
+    group.add_argument("-h", "--hex", action="store_const", dest="input_type",
+        const="hex", help="hex input (default)")
+    group.add_argument("-b", "--binary", action="store_const", dest="input_type",
+        const="binary", help="binary input")
+    group.set_defaults(input_type="hex")
+
+    args = arg_parser.parse_args()
+    if args.input_type == "binary":
+        read_byte = read_binary_stdin
+    else:
+        read_byte = read_hex_stdin
+
+    parse()
