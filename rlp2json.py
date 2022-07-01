@@ -21,7 +21,7 @@ def get_len(ll):
 def parse():
     b = read_byte()
     if b < 0xC0:
-        write("\"")
+        write('"0x')
         if b < 0x80:
             total = 1
             write("%02x" % b)
@@ -35,7 +35,7 @@ def parse():
                 total = 1 + ll + l
             for _ in range(l):      # L bytes of content
                 write("%02x" % read_byte())
-        write("\"")
+        write('"')
     else:
         write("[")
         if b < 0xF8:
