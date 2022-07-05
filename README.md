@@ -24,3 +24,5 @@
   []
 ]
 ```
+
+See also: rlpdump by go-ethereum
